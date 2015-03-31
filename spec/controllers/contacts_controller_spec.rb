@@ -40,16 +40,41 @@ RSpec.describe ContactsController, type: :controller do
   end
 
   describe "GET #show" do
-    xit "returns http success" do
-      get :show
+    it "returns requested contact" do
+      contact = create(:contact)
+      get :show, id: contact
       expect(response).to have_http_status(:success)
+      expect(response).to match_response_schema("contact")
+      expect(response_body['first_name']).to eq contact[:first_name]
     end
   end
 
-  describe "GET #update" do
-    xit "returns http success" do
-      put :update
-      expect(response).to have_http_status(:success)
+  describe "PUT #update" do
+    before :each do
+      @contact = create(:contact, first_name: "Lawrence", last_name: "Smith")
+    end
+
+    context "valid attributes" do
+      it "changes contact's attributes" do
+        put :update, id: @contact, contact: attributes_for(:contact, first_name: 'Larry', last_name: 'Smith')
+        expect(response).to have_http_status(:success)
+        expect(response).to match_response_schema("contact")
+        @contact.reload
+        expect(@contact.first_name).to eq("Larry")
+        expect(@contact.last_name).to eq("Smith")
+      end
+
+    context "with invalid attributes" do
+      it "doesn't change contact's attributes" do
+        put :update, id: @contact, contact: attributes_for(:contact, first_name: nil, last_name: 'Smith')
+        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response_body['first_name']).to eq ["can't be blank"]
+        @contact.reload
+        expect(@contact.first_name).to eq("Lawrence")
+        expect(@contact.last_name).to eq("Smith")
+      end
+    end
+
     end
   end
 
