@@ -8,6 +8,7 @@ gem 'active_model_serializers', '~> 0.9.3'
 gem 'pry-rails'
 
 group :development, :test do
+  gem 'rack-cors', '~> 0.3.1'
   gem 'factory_girl_rails', '~> 4.5.0'
   gem 'faker', '~> 1.4.3'
   gem 'rspec-rails'
