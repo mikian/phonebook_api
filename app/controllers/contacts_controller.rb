@@ -29,6 +29,8 @@ class ContactsController < ApplicationController
   end
 
   def destroy
+    @contact.destroy
+    render json: [], status: :no_content
   end
 
   private

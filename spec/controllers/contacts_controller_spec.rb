@@ -78,10 +78,15 @@ RSpec.describe ContactsController, type: :controller do
     end
   end
 
-  describe "GET #destroy" do
-    xit "returns http success" do
-      delete :destroy
-      expect(response).to have_http_status(:success)
+  describe "DELETE #destroy" do
+    before :each do
+      @contact = create(:contact)
+    end
+
+    it "deletes contact" do
+      expect {
+        delete :destroy, id: @contact
+      }.to change(Contact, :count).by(-1)
     end
   end
 
