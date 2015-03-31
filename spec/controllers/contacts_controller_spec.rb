@@ -12,6 +12,14 @@ RSpec.describe ContactsController, type: :controller do
     end
   end
 
+  describe "GET #download" do
+    it "bulk downloads all contacts" do
+      create_list(:contact, 5)
+      get :download
+      expect(response).to have_http_status(:success)
+    end
+  end
+
   describe "POST #create" do
     context "with valid attributes" do
       it "saves the new contact in the database" do

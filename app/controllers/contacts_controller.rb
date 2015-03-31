@@ -1,9 +1,22 @@
+require 'csv'
+
 class ContactsController < ApplicationController
-  before_action :set_contact, except: [:index, :create]
+  before_action :set_contact, except: [:index, :download, :create]
   def index
     @contacts = Contact.all
 
     render json: @contacts
+  end
+
+  def download
+    csv_out = CSV.generate do |csv|
+      csv << ['ID', 'First Name', 'Last Name', 'Number']
+      Contact.all.each do |contact|
+        csv << contact.slice('id', 'first_name', 'last_name', 'number').values
+      end
+    end
+
+    render text: csv_out
   end
 
   def create
