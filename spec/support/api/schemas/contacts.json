@@ -14,21 +14,13 @@
       },
       "number": {
         "type": "string"
-      },
-      "created_at": {
-        "type": "string"
-      },
-      "updated_at": {
-        "type": "string"
       }
     },
     "required": [
       "id",
       "first_name",
       "last_name",
-      "number",
-      "created_at",
-      "updated_at"
+      "number"
     ]
   }
 }
