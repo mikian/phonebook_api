@@ -9,6 +9,7 @@ gem 'pry-rails'
 
 group :development, :test do
   gem 'factory_girl_rails', '~> 4.5.0'
+  gem 'faker', '~> 1.4.3'
   gem 'rspec-rails'
   gem 'database_cleaner', '~> 1.4.1'
   gem 'json-schema'
