@@ -1,7 +1,7 @@
 require 'csv'
 
 class ContactsController < ApplicationController
-  before_action :set_contact, except: [:index, :download, :create]
+  before_action :set_contact, except: [:index, :download, :upload, :create]
   def index
     @contacts = Contact.all
 
@@ -17,6 +17,31 @@ class ContactsController < ApplicationController
     end
 
     render text: csv_out
+  end
+
+  def upload
+    if params[:file]
+      ids = []
+
+      csv = CSV.new(params[:file], headers: true)
+      while row = csv.shift
+        contact = if row['ID']
+          Contact.find(row['ID'])
+        else
+          Contact.new
+        end
+
+        contact.first_name = row['First Name']
+        contact.last_name  = row['Last Name']
+        contact.number     = row['Number']
+
+        contact.save
+        ids << contact.id
+      end
+
+      # Delete removed contacts
+      Contact.where.not(id: ids).destroy_all
+    end
   end
 
   def create

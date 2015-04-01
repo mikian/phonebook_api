@@ -20,6 +20,31 @@ RSpec.describe ContactsController, type: :controller do
     end
   end
 
+  describe "PUT #upload" do
+
+    it "uploads bulk file and add contacts" do
+      expect {
+        put :upload, file: fixture_file_upload('files/contacts_add.csv', 'text/csv')
+      }.to change(Contact, :count).by(1)
+    end
+
+    it "uploads bulk file and updates contacts" do
+      @contact = create(:contact)
+      expect {
+        put :upload, file: fixture_file_upload('files/contacts_update.csv', 'text/csv')
+      }.to_not change(Contact, :count)
+      @contact.reload
+      expect(@contact.first_name).to eq 'John'
+    end
+
+    it "uploads bulk file and deletes contacts" do
+      create_list(:contact, 2)
+      expect {
+        put :upload, file: fixture_file_upload('files/contacts_delete.csv', 'text/csv')
+      }.to change(Contact, :count).by(-1)
+    end
+  end
+
   describe "POST #create" do
     context "with valid attributes" do
       it "saves the new contact in the database" do
@@ -39,7 +64,7 @@ RSpec.describe ContactsController, type: :controller do
         contact_attributes = attributes_for(:contact).merge(first_name: nil)
         expect {
           post :create, contact: contact_attributes
-        }.to_not change(Contact,:count)
+        }.to_not change(Contact, :count)
         expect(response).to have_http_status(:unprocessable_entity)
         expect(response_body['first_name']).to eq ["can't be blank"]
       end
